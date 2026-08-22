@@ -52,3 +52,4 @@ edit audit trail, date-range reporting, Excel total consistency, receipt upload/
   topology locally (SQLite ≈ D1, disk ≈ R2).
 - Money is exact integer paise — never floats — and the dashboard and reports
   share the same calculation functions, so totals always match.
+# platio-backend
