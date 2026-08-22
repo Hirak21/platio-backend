@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Local dependency install target
+backend/libs/
+
+# Runtime data (DB + uploaded receipts)
+backend/data/
+*.db
+
+# Secrets
+.env

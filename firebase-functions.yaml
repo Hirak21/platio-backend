@@ -1,0 +1,64 @@
+# Firebase Functions 2nd Gen - Python container
+# This defines a Cloud Run service managed by Firebase Functions
+
+functions:
+  - name: "platio-api"
+    # 2nd gen function configuration
+    description: "Platio Construction Finance Tracker API"
+    runtime: "python313"  # Not used for containers, but required
+    
+    # Container configuration (2nd gen)
+    buildConfig:
+      # Build using Dockerfile
+      dockerfile: "backend/Dockerfile"
+      # Build context is the project root
+      dockerContext: "."
+    
+    # Service configuration
+    serviceConfig:
+      # Memory and CPU
+      availableMemory: "512Mi"
+      availableCpu: "1"
+      
+      # Scaling
+      minInstances: 0
+      maxInstances: 10
+      
+      # Timeout
+      timeoutSeconds: 300
+      
+      # Environment variables
+      envVariables:
+        PLATIO_DATA_DIR: "/app/data"
+        PLATIO_NO_DEMO: "1"
+        # PLATIO_SECRET will be set from Secret Manager
+        # PLATIO_CORS_ORIGINS will be set from Secret Manager or config
+      
+      # Secrets
+      secretEnvironmentVariables:
+        - key: "PLATIO_SECRET"
+          secret: "platio-secret"
+          version: "latest"
+        - key: "PLATIO_CORS_ORIGINS"
+          secret: "platio-cors-origins"
+          version: "latest"
+      
+      # VPC connector (if needed for external DB)
+      # vpcConnector: "projects/PROJECT_ID/locations/REGION/connectors/CONNECTOR_NAME"
+      # vpcConnectorEgressSettings: "PRIVATE_RANGES_ONLY"
+    
+    # Event trigger - HTTPS
+    httpsTrigger: {}
+    
+    # Labels
+    labels:
+      deployment-tool: "firebase-functions"
+      component: "api"
+      project: "platio"
+
+# Secrets that need to be created in Secret Manager
+secrets:
+  - secret: "platio-secret"
+    # Create with: echo -n "your-secure-random-secret" | gcloud secrets create platio-secret --data-file=- --project=YOUR_PROJECT_ID
+  - secret: "platio-cors-origins"
+    # Create with: echo -n "https://your-project.web.app,https://your-project.firebaseapp.com" | gcloud secrets create platio-cors-origins --data-file=- --project=YOUR_PROJECT_ID

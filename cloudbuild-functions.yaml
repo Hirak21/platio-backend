@@ -1,0 +1,29 @@
+# Platio Backend - Firebase Functions 2nd Gen (Python)
+# This runs on Cloud Run but managed by Firebase Functions
+
+steps:
+  # Build the Python container
+  - name: 'python:3.13-slim'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        pip install --target=/workspace/functions/dist -r /workspace/backend/requirements.txt
+    dir: '/workspace'
+
+  # Deploy to Firebase Functions (2nd gen)
+  - name: 'gcr.io/cloud-builders/npm'
+    args:
+      - 'exec'
+      - 'firebase'
+      - 'deploy'
+      - '--only=functions'
+      - '--project=${_FIREBASE_PROJECT_ID}'
+      - '--token=${_FIREBASE_TOKEN}'
+    dir: 'functions'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+substitutions:
+  _FIREBASE_PROJECT_ID: 'your-firebase-project-id'

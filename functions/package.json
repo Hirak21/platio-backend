@@ -1,0 +1,16 @@
+{
+  "name": "platio-functions",
+  "version": "1.0.0",
+  "description": "Firebase Functions 2nd gen for Platio",
+  "private": true,
+  "scripts": {
+    "build": "echo 'No build step needed for Python'",
+    "deploy": "firebase deploy --only functions"
+  },
+  "engines": {
+    "node": "20"
+  },
+  "devDependencies": {
+    "firebase-tools": "^13.0.0"
+  }
+}

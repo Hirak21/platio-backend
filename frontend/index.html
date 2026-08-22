@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Platio — Construction Finance Tracker</title>
+  <link rel="stylesheet" href="/static/css/styles.css" />
+</head>
+<body>
+  <!-- Login -->
+  <div id="login-view" class="login-wrap">
+    <div class="login-card">
+      <div class="brand">Platio</div>
+      <div class="brand-sub">Construction Finance & Expense Tracking</div>
+      <form id="login-form" class="form">
+        <label>Username
+          <input id="login-username" type="text" autocomplete="username" required />
+        </label>
+        <label>Password
+          <input id="login-password" type="password" autocomplete="current-password" required />
+        </label>
+        <button type="submit" class="btn btn-primary">Sign in</button>
+        <div id="login-error" class="error" hidden></div>
+        <div class="hint">Default admin — <code>admin</code> / <code>platio1234</code></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- App -->
+  <div id="app-view" class="app" style="display:none">
+    <aside class="sidebar">
+      <div class="brand">Platio</div>
+      <nav id="nav">
+        <a href="#dashboard" data-route="dashboard">Dashboard</a>
+        <a href="#projects" data-route="projects">Projects</a>
+        <a href="#add-income" data-route="add-income">Add Income</a>
+        <a href="#add-expense" data-route="add-expense">Add Expense</a>
+        <a href="#transactions" data-route="transactions">Transactions</a>
+        <a href="#reports" data-route="reports">Reports</a>
+        <a href="#settings" data-route="settings">Settings</a>
+      </nav>
+      <div class="sidebar-foot">
+        <span id="user-label"></span>
+        <button id="logout-btn" class="btn btn-ghost">Sign out</button>
+      </div>
+    </aside>
+
+    <main class="content">
+      <div id="view"></div>
+    </main>
+  </div>
+
+  <div id="toast" class="toast" hidden></div>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "projects": {
+    "default": "platio-app",
+    "staging": "platio-app-staging",
+    "production": "platio-app"
+  },
+  "targets": {
+    "platio-app": {
+      "hosting": {
+        "platio-frontend": [
+          "platio-frontend"
+        ]
+      }
+    }
+  }
+}

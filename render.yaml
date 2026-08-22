@@ -1,0 +1,37 @@
+# Render.com deployment config for Platio Backend
+# Free tier: 750 hours/month, auto-sleeps after 15 min inactivity
+
+services:
+  - type: web
+    name: platio-backend
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: .
+    region: oregon  # or frankfurt, singapore
+    plan: free
+    
+    # Environment variables
+    envVars:
+      - key: PLATIO_SECRET
+        generateValue: true  # Render will generate a secure random value
+      - key: PLATIO_CORS_ORIGINS
+        value: "https://platio-app.web.app,https://platio-app.firebaseapp.com,http://localhost:8000"
+      - key: PLATIO_DATA_DIR
+        value: "/app/data"
+      - key: PLATIO_NO_DEMO
+        value: "1"
+      - key: PYTHONPATH
+        value: "/app/libs"
+    
+    # Health check
+    healthCheckPath: /health
+    
+    # Auto-deploy on push to main
+    autoDeploy: true
+    
+    # Disk for persistent data (SQLite + receipts)
+    # Free tier includes 100GB disk
+    disk:
+      name: platio-data
+      mountPath: /app/data
+      sizeGB: 1

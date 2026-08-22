@@ -1,0 +1,87 @@
+# Cloud Build configuration for deploying Platio to Cloud Run
+# Run with: gcloud builds submit --config cloudbuild.yaml --substitutions=_FIREBASE_PROJECT_ID=your-project-id
+
+steps:
+  # Build and push Docker image to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/platio/platio-backend:$COMMIT_SHA'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/platio/platio-backend:latest'
+      - 'backend'
+    dir: '.'
+
+  # Push to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/platio/platio-backend:$COMMIT_SHA'
+    dir: '.'
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/platio/platio-backend:latest'
+    dir: '.'
+
+  # Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    args:
+      - 'run'
+      - 'deploy'
+      - 'platio-backend'
+      - '--image'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/platio/platio-backend:$COMMIT_SHA'
+      - '--region'
+      - '${_REGION}'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--port'
+      - '8080'
+      - '--memory'
+      - '512Mi'
+      - '--cpu'
+      - '1'
+      - '--min-instances'
+      - '0'
+      - '--max-instances'
+      - '10'
+      - '--set-env-vars'
+      - 'PLATIO_SECRET=${_PLATIO_SECRET},PLATIO_CORS_ORIGINS=${_PLATIO_CORS_ORIGINS},PLATIO_DATA_DIR=/app/data,PLATIO_NO_DEMO=1'
+      - '--set-secrets'
+      - 'PLATIO_SECRET=platio-secret:latest'
+    dir: '.'
+
+  # Deploy frontend to Firebase Hosting
+  - name: 'gcr.io/cloud-builders/npm'
+    args:
+      - 'install'
+      - '-g'
+      - 'firebase-tools'
+    dir: '.'
+
+  - name: 'gcr.io/cloud-builders/npm'
+    args:
+      - 'exec'
+      - 'firebase'
+      - 'deploy'
+      - '--only=hosting'
+      - '--project'
+      - '${_FIREBASE_PROJECT_ID}'
+      - '--token'
+      - '${_FIREBASE_TOKEN}'
+    dir: '.'
+
+# Artifact Registry repository must exist
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+# Substitutions with defaults
+substitutions:
+  _REGION: 'us-central1'
+  _FIREBASE_PROJECT_ID: 'your-firebase-project-id'
+  _PLATIO_CORS_ORIGINS: 'https://your-firebase-project-id.web.app,https://your-firebase-project-id.firebaseapp.com'
