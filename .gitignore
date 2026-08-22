@@ -12,3 +12,6 @@ backend/data/
 
 # Secrets
 .env
+ls/
+google-cloud-sdk/
+.firebase/
