@@ -1,5 +1,5 @@
 # Platio Backend - Render Deployment
-# Single-stage build (simpler and more reliable)
+# Single-stage build with uvicorn workers for ASGI
 FROM python:3.13-slim
 
 # Install build dependencies
@@ -32,5 +32,5 @@ ENV PYTHONUNBUFFERED=1
 # Render sets PORT env var (default 10000)
 EXPOSE 10000
 
-# Use gunicorn for production
-CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 app:app
+# Use gunicorn with uvicorn workers for ASGI (FastAPI)
+CMD exec gunicorn --bind :$PORT --workers 1 --worker-class uvicorn.workers.UvicornWorker --threads 8 --timeout 0 app:app
