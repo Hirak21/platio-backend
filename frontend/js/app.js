@@ -2,7 +2,7 @@
 
 const TOKEN_KEY = "platio_token";
 // API base URL - set at build/deploy time via sed in deploy.sh
-const API_BASE = 'https://platio-backend.onrender.com';
+const API_BASE = 'https://platio-backend-1.onrender.com';
 const state = {
   user: null,
   token: localStorage.getItem(TOKEN_KEY) || null,
