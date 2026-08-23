@@ -21,6 +21,9 @@ RUN useradd -m -u 1000 appuser
 
 WORKDIR /app
 
+# Install runtime dependencies (gunicorn) - not in builder's target dir
+RUN pip install --no-cache-dir gunicorn
+
 # Copy installed packages from builder
 COPY --from=builder /app/libs ./libs
 
