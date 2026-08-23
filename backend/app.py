@@ -13,7 +13,7 @@ from routes import (
     audit_routes,
 )
 
-from config import FRONTEND_DIR, CORS_ORIGINS
+from config import FRONTEND_DIR, CORS_ORIGINS, HAS_FRONTEND
 
 app = FastAPI(title="Platio — Construction Finance Tracker")
 
@@ -42,14 +42,15 @@ app.include_router(receipt_routes.router)
 app.include_router(category_routes.router)
 app.include_router(audit_routes.router)
 
-# Serve static files (frontend) in production
-app.mount("/static", StaticFiles(directory=str(FRONTEND_DIR)), name="static")
+# Serve static files (frontend) only in local dev where frontend/ exists
+if HAS_FRONTEND:
+    app.mount("/static", StaticFiles(directory=str(FRONTEND_DIR)), name="static")
 
-@app.get("/")
-def index():
-    return FileResponse(str(FRONTEND_DIR / "index.html"))
+    @app.get("/")
+    def index():
+        return FileResponse(str(FRONTEND_DIR / "index.html"))
 
-# Health check endpoint for Cloud Run
+# Health check endpoint for Cloud Run / Render
 @app.get("/health")
 def health():
     return {"status": "healthy"}

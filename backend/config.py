@@ -21,6 +21,9 @@ SESSION_MAX_AGE = 60 * 60 * 24 * 7  # 7 days
 # CORS origins - comma-separated list in production
 CORS_ORIGINS = os.environ.get("PLATIO_CORS_ORIGINS", "http://localhost:8000,http://127.0.0.1:8000").split(",")
 
+# Frontend directory exists in local dev, not in production Docker
+HAS_FRONTEND = FRONTEND_DIR.exists()
+
 ALLOWED_RECEIPT_TYPES = {
     "image/jpeg": ".jpg",
     "image/png": ".png",
