@@ -582,7 +582,7 @@ function catTable(list) {
 async function exportExcel() {
   const q = await buildReportQuery();
   const params = new URLSearchParams(Object.entries(q).filter(([,v])=>v!==undefined&&v!=="").map(([k,v])=>[k,v])).toString();
-  const res = await fetch("/reports/export?" + params, { credentials: "same-origin", method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify(q) });
+  const res = await fetch(API_BASE + "/reports/export?" + params, { credentials: "same-origin", method: "POST", headers: {"Content-Type":"application/json", "Authorization": "Bearer " + state.token}, body: JSON.stringify(q) });
   if (!res.ok) { toast("Export failed", true); return; }
   const blob = await res.blob();
   const url = URL.createObjectURL(blob);
