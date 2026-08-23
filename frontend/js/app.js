@@ -359,7 +359,8 @@ async function submitTxn(e, type) {
   const fd = Object.fromEntries(new FormData(form));
   fd.type = type;
   fd.amount = parseFloat(String(fd.amount).replace(/,/g, ""));
-  fd.project_id = parseInt(fd.project_id, 10);
+  const _tpid = parseInt(fd.project_id, 10);
+  fd.project_id = Number.isInteger(_tpid) ? _tpid : null;
   const msg = el("txn-msg"); msg.hidden = true;
   try {
     const created = await api("/transactions", { method: "POST", body: JSON.stringify(fd) });
@@ -400,7 +401,8 @@ async function viewTransactions() {
     <div id="txn-result"></div>
   `);
   el("f-apply").onclick = () => {
-    txnFilters.project_id = el("f-project").value ? +el("f-project").value : undefined;
+    const _fpid = parseInt(el("f-project").value, 10);
+    txnFilters.project_id = Number.isInteger(_fpid) ? _fpid : undefined;
     txnFilters.type = el("f-type").value || undefined;
     txnFilters.category = el("f-category").value || undefined;
     txnFilters.party = el("f-party").value || undefined;
@@ -546,7 +548,8 @@ async function viewReports() {
 }
 async function buildReportQuery() {
   const q = {};
-  q.project_id = el("r-project").value ? +el("r-project").value : undefined;
+  const _rpid = parseInt(el("r-project").value, 10);
+  q.project_id = Number.isInteger(_rpid) ? _rpid : undefined;
   q.type = el("r-type").value || undefined;
   q.category = el("r-category").value || undefined;
   q.party = el("r-party").value || undefined;
