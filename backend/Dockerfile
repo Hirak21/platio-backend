@@ -1,4 +1,4 @@
-# Platio Backend - Cloud Run Deployment
+# Platio Backend - Render Deployment
 # Multi-stage build for smaller production image
 FROM python:3.13-slim AS builder
 
@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /app
 
 # Copy requirements first for better caching
-COPY requirements.txt .
+COPY backend/requirements.txt .
 RUN pip install --no-cache-dir --target=/app/libs -r requirements.txt
 
 # Production stage
@@ -24,8 +24,8 @@ WORKDIR /app
 # Copy installed packages from builder
 COPY --from=builder /app/libs ./libs
 
-# Copy application code
-COPY . .
+# Copy application code (only backend folder)
+COPY backend/ .
 
 # Create data directories
 RUN mkdir -p /app/data /app/data/receipts && chown -R appuser:appuser /app
@@ -38,7 +38,7 @@ ENV PYTHONPATH=/app/libs
 ENV PLATIO_DATA_DIR=/app/data
 ENV PYTHONUNBUFFERED=1
 
-# Cloud Run sets PORT env var (default 8080)
+# Cloud Run/Render sets PORT env var (default 8080)
 EXPOSE 8080
 
 # Use gunicorn for production (better than uvicorn --reload)
