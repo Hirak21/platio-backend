@@ -232,7 +232,7 @@ async function viewProjects() {
   setView(`<h1>Projects</h1><div class="sub">Each project is financially isolated.</div>
     <div class="btn-row" style="margin-bottom:16px;"><button class="btn btn-primary" id="new-proj">+ New Project</button></div>
     <div id="proj-list"></div>`);
-  el("new-proj").onclick = openProjectModal;
+  el("new-proj").onclick = () => openProjectModal();
   await renderProjects();
 }
 async function renderProjects() {
