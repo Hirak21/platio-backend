@@ -281,3 +281,5 @@ def init_db() -> None:
         conn.commit()
     finally:
         conn.close()
+
+# Postgres-backed (persistent across backend restarts)
