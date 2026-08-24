@@ -54,7 +54,9 @@ async function api(path, opts = {}) {
 }
 async function apiForm(path, formData) {
   const url = API_BASE ? API_BASE + path : path;
-  const res = await fetch(url, { credentials: "same-origin", method: "POST", body: formData });
+  const headers = {};
+  if (state.token) headers["Authorization"] = "Bearer " + state.token;
+  const res = await fetch(url, { credentials: "same-origin", method: "POST", body: formData, headers });
   if (res.status === 401) { showLogin(); throw new Error("unauthenticated"); }
   let data = null; try { data = await res.json(); } catch (_) {}
   if (!res.ok) throw new Error((data && data.detail) || "Upload failed");
@@ -445,7 +447,7 @@ async function txnTable(items, compact) {
       <td data-label="Description">${esc(t.description || t.party || "—")}</td>
       <td data-label="Category">${esc(t.category_name || "—")}</td>
       <td data-label="Party">${esc(t.party || "—")}</td>
-      <td data-label="Amount" class="num">${fmt(t.amount_paise / 100)}</td>
+      <td data-label="Amount" class="num">${fmt(t.amount)}</td>
       <td data-label="Method">${esc(t.payment_method || "—")}</td>
       <td data-label="Receipt">${t.has_receipt ? "📎" : "—"}</td>
     </tr>`).join("");
@@ -469,7 +471,7 @@ async function openTxnModal(id) {
     <div class="detail-grid">
       <div class="k">Project</div><div>${esc(t.project_name)}</div>
       <div class="k">Type</div><div><span class="tag ${t.type}">${t.type}</span></div>
-      <div class="k">Amount</div><div>${fmt(t.amount_paise / 100)}</div>
+      <div class="k">Amount</div><div>${fmt(t.amount)}</div>
       <div class="k">Date</div><div>${esc(t.date)}</div>
       <div class="k">Category</div><div>${esc(t.category_name || "—")}</div>
       <div class="k">${t.type === "income" ? "Source" : "Vendor"}</div><div>${esc(t.party || "—")}</div>
@@ -504,7 +506,7 @@ function openTxnEdit(t) {
         <label>Type<select name="type"><option ${t.type==="income"?"selected":""}>income</option><option ${t.type==="expense"?"selected":""}>expense</option></select></label>
         <label>Date<input type="date" name="date" value="${esc(t.date)}" required></label>
       </div>
-      <label>Amount (₹)<input type="number" step="0.01" min="0.01" name="amount" value="${t.amount_paise/100}" required></label>
+        <label>Amount (₹)<input type="number" step="0.01" min="0.01" name="amount" value="${t.amount}" required></label>
       <div class="form-row">
         <label>Category<select name="category">${categoryOptions(kind, t.category_name)}</select></label>
         <label>Payment Method<input name="payment_method" value="${esc(t.payment_method||"")}"></label>
