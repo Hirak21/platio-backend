@@ -21,7 +21,7 @@
         </label>
         <button type="submit" class="btn btn-primary">Sign in</button>
         <div id="login-error" class="error" hidden></div>
-        <div class="hint">Default admin — <code>admin</code> / <code>platio1234</code></div>
+        <div class="hint">Username <code>Platio</code> · password <code>Platio0908</code></div>
       </form>
     </div>
   </div>
@@ -29,6 +29,7 @@
   <!-- App -->
   <div id="app-view" class="app" style="display:none">
     <aside class="sidebar">
+      <button id="nav-toggle" class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
       <div class="brand">Platio</div>
       <nav id="nav">
         <a href="#dashboard" data-route="dashboard">Dashboard</a>
@@ -48,6 +49,7 @@
     <main class="content">
       <div id="view"></div>
     </main>
+    <div id="nav-backdrop" class="nav-backdrop"></div>
   </div>
 
   <div id="toast" class="toast" hidden></div>

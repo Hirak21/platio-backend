@@ -15,6 +15,10 @@ ADMIN_USERNAME = "admin"
 ADMIN_PASSWORD = "platio1234"
 ADMIN_DISPLAY = "Administrator"
 
+PLATIO_USERNAME = "Platio"
+PLATIO_PASSWORD = "Platio0908"
+PLATIO_DISPLAY = "Platio"
+
 EXPENSE_CATEGORIES = [
     "Materials", "Labour", "Transport", "Equipment", "Machinery", "Fuel",
     "Electricity", "Water", "Contractor", "Subcontractor", "Site Expenses",
@@ -41,6 +45,16 @@ def ensure_basics():
                 "VALUES (?,?,?,?,?,?)",
                 (ADMIN_USERNAME, auth.hash_password(ADMIN_PASSWORD), "admin",
                  ADMIN_DISPLAY, _now(), _now()),
+            )
+        platio = conn.execute(
+            "SELECT id FROM users WHERE username = ?", (PLATIO_USERNAME,)
+        ).fetchone()
+        if not platio:
+            conn.execute(
+                "INSERT INTO users (username, password_hash, role, display_name, created_at, updated_at) "
+                "VALUES (?,?,?,?,?,?)",
+                (PLATIO_USERNAME, auth.hash_password(PLATIO_PASSWORD), "admin",
+                 PLATIO_DISPLAY, _now(), _now()),
             )
         for kind, names in (("expense", EXPENSE_CATEGORIES), ("income", INCOME_CATEGORIES)):
             for name in names:

@@ -652,4 +652,12 @@ function modal(html) {
 function closeModal() { const m = el("modal-back"); if (m) m.remove(); }
 
 /* ---------------- Boot ---------------- */
+function setupMobileNav() {
+  const t = el("nav-toggle");
+  const b = el("nav-backdrop");
+  if (t) t.onclick = () => document.body.classList.toggle("nav-open");
+  if (b) b.onclick = () => document.body.classList.remove("nav-open");
+  $all("#nav a").forEach((a) => a.addEventListener("click", () => document.body.classList.remove("nav-open")));
+}
+setupMobileNav();
 checkAuth();
