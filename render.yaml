@@ -22,6 +22,8 @@ services:
         value: "1"
       - key: PYTHONPATH
         value: "/app/libs"
+      - key: DATABASE_URL
+        value: "postgresql://postgresql_platio_user:cNHKElsLwpK0QDUZRI7FaS7BrOGdTFnZ@dpg-da60vv6k1f9s738n72o0-a.singapore-postgres.render.com/postgresql_platio?sslmode=require"
     
     # Health check
     healthCheckPath: /health
