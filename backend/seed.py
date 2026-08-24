@@ -169,3 +169,5 @@ if __name__ == "__main__":
     ensure_basics()
     ensure_demo()
     print("Seed complete.")
+
+# deploy-marker
