@@ -147,7 +147,7 @@ a.link:hover { text-decoration: underline; }
   .app { flex-direction: column; }
   .sidebar {
     width: 100%; height: auto; position: sticky; top: 0; flex-direction: row; align-items: center;
-    padding: 10px 12px; z-index: 40;
+    padding: 10px 12px; z-index: 50;
   }
   .nav-toggle { display: inline-flex; align-items: center; }
   .sidebar .brand { padding: 0 8px; font-size: 20px; }
