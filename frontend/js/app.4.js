@@ -23,6 +23,7 @@ async function api(path, opts = {}) {
   const headers = { "Content-Type": "application/json" };
   if (state.token) headers["Authorization"] = "Bearer " + state.token;
   const url = API_BASE ? API_BASE + path : path;
+  console.log("[API] →", path, opts?.method || "GET", url);
   const res = await fetch(url, {
     credentials: "same-origin",
     headers,
