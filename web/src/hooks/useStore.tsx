@@ -12,7 +12,7 @@ import { useAuth } from './useAuth'
 const StoreContext = createContext<Store | null>(null)
 
 export function StoreProvider({ children }: { children: ReactNode }) {
-  const { user, loading: authLoading } = useAuth()
+  const { user, loading: authLoading, signIn } = useAuth()
   const [store] = useState<Store>(() => getStore())
   const [ready, setReady] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -50,10 +50,25 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     }
     if (error) {
       const isPermission = /403|PERMISSION_DENIED|does not have permission/i.test(error)
+      const isAuthError = /401|UNAUTHENTICATED|invalid authentication credentials/i.test(error)
       return (
         <div className="flex min-h-dvh flex-col items-center justify-center gap-4 text-center text-slate-600">
           <p className="max-w-md px-6 text-sm">Store error: {error}</p>
-          {isPermission ? (
+          {isAuthError ? (
+            <>
+              <p className="max-w-md px-6 text-xs text-slate-400">
+                Your session has expired. Please sign in again to get a fresh access token.
+              </p>
+              <button
+                type="button"
+                onClick={signIn}
+                disabled={retrying}
+                className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-60"
+              >
+                {retrying ? 'Signing in…' : 'Sign in again'}
+              </button>
+            </>
+          ) : isPermission ? (
             <p className="max-w-md px-6 text-xs text-slate-400">
               This account lacks access. The no-server app uses the signed-in user's own Google token, so this
               account must be (1) added as a Test User in the OAuth consent screen, and (2) granted Editor access
@@ -64,14 +79,16 @@ export function StoreProvider({ children }: { children: ReactNode }) {
               If this says Sheets API 503/500, Google is temporarily down — wait a moment and retry.
             </p>
           )}
-          <button
-            type="button"
-            onClick={bootstrap}
-            disabled={retrying}
-            className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-60"
-          >
-            {retrying ? 'Retrying…' : 'Retry'}
-          </button>
+          {!isAuthError && (
+            <button
+              type="button"
+              onClick={bootstrap}
+              disabled={retrying}
+              className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-60"
+            >
+              {retrying ? 'Retrying…' : 'Retry'}
+            </button>
+          )}
         </div>
       )
     }
