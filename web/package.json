@@ -16,7 +16,7 @@
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.2",
     "recharts": "^2.15.4",
-    "sheets-core": "file:../../sheets-core",
+    "sheets-core": "file:../packages/sheets-core",
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {

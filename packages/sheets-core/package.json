@@ -1,0 +1,27 @@
+{
+  "name": "sheets-core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "No-server data layer: Firebase Google auth + Google Sheets API v4 + client-side xlsx. Shared by Platio and Invento.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "node --experimental-strip-types src/money.test.ts"
+  },
+  "dependencies": {
+    "firebase": "^11.0.0",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0"
+  }
+}
